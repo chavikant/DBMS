@@ -48,6 +48,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Currently selected stock symbol for chart
     let selectedStock = null;
 
+    // Interval ID for dynamic updates
+    let dynamicUpdateInterval = null;
+
     // Show page helper
     function showPage(page) {
         pageLogin.classList.remove('active');
@@ -62,17 +65,21 @@ document.addEventListener('DOMContentLoaded', () => {
         if (page === 'login') {
             pageLogin.classList.add('active');
             mainNav.style.display = 'none';
+            stopDynamicUpdates();
         } else {
             mainNav.style.display = 'flex';
             if (page === 'dashboard') {
                 pageDashboard.classList.add('active');
                 navDashboard.classList.add('active');
+                startDynamicUpdates();
             } else if (page === 'add-stock') {
                 pageAddStock.classList.add('active');
                 navAddStock.classList.add('active');
+                stopDynamicUpdates();
             } else if (page === 'watchlist') {
                 pageWatchlist.classList.add('active');
                 navWatchlist.classList.add('active');
+                stopDynamicUpdates();
             }
         }
     }
@@ -350,7 +357,48 @@ document.addEventListener('DOMContentLoaded', () => {
         return history;
     }
 
+    function resizeCanvas() {
+        const containerWidth = stockChartCanvas.parentElement.clientWidth;
+        stockChartCanvas.width = containerWidth;
+        stockChartCanvas.height = 300; // fixed height for better visibility
+    }
+
+    function drawGridLines(ctx, padding, width, height, maxPrice, minPrice) {
+        ctx.strokeStyle = '#ccc';
+        ctx.lineWidth = 0.5;
+        ctx.font = '10px Arial';
+        ctx.fillStyle = '#666';
+
+        // Horizontal grid lines and labels
+        const numLines = 5;
+        for (let i = 0; i <= numLines; i++) {
+            const y = padding + (height / numLines) * i;
+            ctx.beginPath();
+            ctx.moveTo(padding, y);
+            ctx.lineTo(padding + width, y);
+            ctx.stroke();
+
+            const priceLabel = (maxPrice - ((maxPrice - minPrice) / numLines) * i).toFixed(2);
+            ctx.fillText(`$${priceLabel}`, 5, y + 3);
+        }
+
+        // Vertical grid lines and labels (days)
+        const numVerticalLines = 6;
+        for (let i = 0; i <= numVerticalLines; i++) {
+            const x = padding + (width / numVerticalLines) * i;
+            ctx.beginPath();
+            ctx.moveTo(x, padding + height);
+            ctx.lineTo(x, padding + height + 5);
+            ctx.stroke();
+
+            const dayLabel = `Day ${Math.round((i * 30) / numVerticalLines)}`;
+            ctx.fillText(dayLabel, x - 10, padding + height + 20);
+        }
+    }
+
     function drawStockChart(symbol) {
+        resizeCanvas();
+
         const prices = stockPriceHistory[symbol] || generateRandomPriceHistory(100);
         stockPriceHistory[symbol] = prices;
 
@@ -360,6 +408,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const width = stockChartCanvas.width - padding * 2;
         const height = stockChartCanvas.height - padding * 2;
 
+        // Draw axes
         stockChartCtx.strokeStyle = '#333';
         stockChartCtx.lineWidth = 1;
         stockChartCtx.beginPath();
@@ -372,6 +421,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const minPrice = Math.min(...prices);
         const range = maxPrice - minPrice || 1;
 
+        // Draw grid lines and labels
+        drawGridLines(stockChartCtx, padding, width, height, maxPrice, minPrice);
+
+        // Draw price line
         stockChartCtx.strokeStyle = '#8b5cf6';
         stockChartCtx.lineWidth = 2;
         stockChartCtx.beginPath();
@@ -387,11 +440,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         stockChartCtx.stroke();
 
-        stockChartCtx.fillStyle = '#f0f0f5';
-        stockChartCtx.font = '12px Arial';
-        stockChartCtx.fillText(symbol.toUpperCase(), padding, padding - 10);
-        stockChartCtx.fillText(`Max: $${maxPrice.toFixed(2)}`, padding + width - 80, padding - 10);
-        stockChartCtx.fillText(`Min: $${minPrice.toFixed(2)}`, padding + width - 80, padding + height + 20);
+        // Draw labels
+        stockChartCtx.fillStyle = '#333';
+        stockChartCtx.font = '14px Arial';
+        stockChartCtx.fillText(symbol.toUpperCase(), padding, padding - 15);
+        stockChartCtx.fillText(`Max: $${maxPrice.toFixed(2)}`, padding + width - 100, padding - 15);
+        stockChartCtx.fillText(`Min: $${minPrice.toFixed(2)}`, padding + width - 100, padding + height + 35);
     }
 
     function clearChart() {
@@ -446,6 +500,51 @@ document.addEventListener('DOMContentLoaded', () => {
             drawStockChart(symbol);
             saveUserData(currentUserEmail);
             watchlistInput.value = '';
+        }
+    });
+
+    // Dynamic stock price updates
+    function startDynamicUpdates() {
+        if (dynamicUpdateInterval) return; // Already running
+
+        dynamicUpdateInterval = setInterval(() => {
+            if (!selectedStock) return;
+
+            // Simulate new price
+            const prices = stockPriceHistory[selectedStock] || generateRandomPriceHistory(100);
+            let lastPrice = prices[prices.length - 1];
+            let newPrice = lastPrice + (Math.random() - 0.5) * 2;
+            newPrice = Math.max(newPrice, 1);
+
+            prices.push(newPrice);
+            if (prices.length > 30) {
+                prices.shift(); // Keep last 30 prices
+            }
+            stockPriceHistory[selectedStock] = prices;
+
+            // Update current price
+            currentPrices[selectedStock] = newPrice;
+
+            // Update summary and stocks overview
+            updateSummary();
+            renderStocksOverview();
+
+            // Redraw chart
+            drawStockChart(selectedStock);
+        }, 3000); // Update every 3 seconds
+    }
+
+    function stopDynamicUpdates() {
+        if (dynamicUpdateInterval) {
+            clearInterval(dynamicUpdateInterval);
+            dynamicUpdateInterval = null;
+        }
+    }
+
+    // Add window resize event listener to resize canvas and redraw chart
+    window.addEventListener('resize', () => {
+        if (selectedStock) {
+            drawStockChart(selectedStock);
         }
     });
 

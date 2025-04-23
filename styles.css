@@ -331,115 +331,102 @@ button[type="submit"]:hover, #add-watchlist-btn:hover {
 }
 
 /* Responsive styles for mobile screens */
-@media (max-width: 600px) {
-    body {
-        padding: 20px 10px;
-    }
-
-    h1 {
-        font-size: 2rem;
-        letter-spacing: 1px;
-    }
-
-    .nav-links {
-        flex-direction: column;
-        gap: 15px;
-    }
-
-    .nav-links li a {
-        font-size: 1rem;
-        padding: 10px 20px;
-    }
-
-    main {
-        padding: 30px 20px;
-        max-width: 100%;
-        border-radius: 10px;
-    }
-
-    h2 {
+/* Responsive Styling */
+@media (max-width: 768px) {
+    header h1 {
         font-size: 1.5rem;
-        margin-bottom: 20px;
-        padding-bottom: 8px;
+        text-align: center;
     }
 
-    .input-section, .analysis-section {
-        margin-bottom: 40px;
+    nav ul.nav-links {
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+        padding: 0;
     }
 
-    form input[type="text"],
-    form input[type="number"],
-    form input[type="email"],
-    form input[type="password"],
-    form select {
-        font-size: 1rem;
-        padding: 12px 14px;
+    .login-container {
+        width: 90%;
+        margin: auto;
+        padding: 10px;
     }
 
-    button[type="submit"], #add-watchlist-btn {
-        font-size: 1.1rem;
-        padding: 14px 30px;
+    .auth-toggle-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
     }
 
-    #portfolio-summary p {
-        font-size: 1.2rem;
-        margin-bottom: 15px;
+    .auth-form {
+        width: 100%;
+        padding: 10px;
     }
 
-    #transactions-table th,
-    #transactions-table td {
-        padding: 12px 15px;
-        font-size: 0.9rem;
+    .auth-form input,
+    .auth-form button {
+        width: 100%;
+        margin-bottom: 10px;
     }
 
-    .dashboard-grid {
-        grid-template-columns: 1fr;
-        gap: 25px;
+    .analysis-section,
+    .dashboard-section,
+    .input-section,
+    .watchlist {
+        width: 95%;
+        margin: auto;
+        padding: 10px;
     }
 
-    .watchlist, .stocks-overview, .stock-graph {
-        padding: 20px;
-        border-radius: 15px;
+    table {
+        width: 100%;
+        overflow-x: auto;
+        display: block;
     }
 
-    #watchlist-stocks {
-        max-height: 180px;
-        margin-bottom: 20px;
-    }
-
-    #watchlist-stocks li {
-        padding: 12px 15px;
-        font-size: 1rem;
-    }
-
-    #watchlist-stocks li button {
-        padding: 6px 14px;
-        font-size: 1rem;
+    canvas#stock-chart {
+        width: 100% !important;
+        height: 200px !important;
     }
 
     #watchlist-input {
-        font-size: 1rem;
-        padding: 12px 14px;
-        margin-right: 15px;
+        width: 100%;
+        margin-top: 10px;
     }
 
-    #stocks-overview-table th,
-    #stocks-overview-table td {
-        padding: 12px 15px;
-        font-size: 1rem;
+    #add-watchlist-btn {
+        width: 100%;
+        margin-top: 5px;
     }
 
-    .stock-graph canvas {
-        border-radius: 15px;
+    nav ul.nav-links {
+        display: flex !important;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        padding: 0;
+        margin-top: 15px;
     }
 
-    #gain-loss {
-        font-size: 1.2rem;
+    nav ul.nav-links li {
+        width: 100%;
+        text-align: center;
     }
 
-    .toggle-btn {
-        font-size: 1rem;
-        padding: 10px 24px;
-        margin-right: 10px;
+    nav ul.nav-links li a {
+        display: block;
+        padding: 12px 0;
+        width: 100%;
+        max-width: 250px;
+        background-color: #f0f0f0;
+        border-radius: 30px;
+        text-decoration: none;
+        font-weight: bold;
+        color: #333;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
+
+    nav ul.nav-links li a.active {
+        background-color: #ff6600;
+        color: white;
+    }    
 }
