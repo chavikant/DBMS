@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Stock Portfolio Analysis</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+    <header>
+        <h1>Stock Portfolio Analysis</h1>
+        <nav>
+            <ul class="nav-links" id="main-nav" style="display:none;">
+                <li><a href="#" id="nav-dashboard" class="active">Dashboard</a></li>
+                <li><a href="#" id="nav-add-stock">Add Stock</a></li>
+                <li><a href="#" id="nav-watchlist">Watchlist</a></li>
+                <li><a href="#" id="nav-logout">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <!-- Login/Register Page -->
+        <section id="page-login" class="page active">
+            <div class="login-container">
+                <div class="auth-toggle-buttons">
+                    <button id="show-login-btn" class="toggle-btn active">Existing User Login</button>
+                    <button id="show-register-btn" class="toggle-btn">New User Registration</button>
+                </div>
+
+                <form id="login-form" class="auth-form">
+                    <h2>Login</h2>
+                    <label for="login-email">Email:</label>
+                    <input type="email" id="login-email" required />
+                    <label for="login-password">Password:</label>
+                    <input type="password" id="login-password" required />
+                    <button type="submit">Login</button>
+                </form>
+
+                <form id="register-form" class="auth-form" style="display:none;">
+                    <h2>Register</h2>
+                    <label for="register-name">Name:</label>
+                    <input type="text" id="register-name" required />
+                    <label for="register-email">Email:</label>
+                    <input type="email" id="register-email" required />
+                    <label for="register-password">Password:</label>
+                    <input type="password" id="register-password" required />
+                    <button type="submit">Register</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Dashboard Page -->
+        <section id="page-dashboard" class="page">
+            <section class="analysis-section">
+                <h2>Portfolio Summary</h2>
+                <div id="portfolio-summary">
+                    <p>Total Investment: $<span id="total-investment">0.00</span></p>
+                    <p>Total Shares: <span id="total-shares">0</span></p>
+                    <p>Current Value: $<span id="current-value">0.00</span></p>
+                    <p>Gain / Loss: $<span id="gain-loss">0.00</span></p>
+                </div>
+            </section>
+            <section class="dashboard-section">
+                <h2>Stocks Overview</h2>
+                <table id="stocks-overview-table">
+                    <thead>
+                        <tr>
+                            <th>Symbol</th>
+                            <th>Price</th>
+                            <th>Change</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Stocks overview rows -->
+                    </tbody>
+                </table>
+            </section>
+            <section class="dashboard-section">
+                <h2>Stock Price Graph</h2>
+                <canvas id="stock-chart" width="400" height="250"></canvas>
+            </section>
+        </section>
+
+        <!-- Add Stock Page -->
+        <section id="page-add-stock" class="page">
+            <section class="input-section">
+                <h2>Add Stock Transaction</h2>
+                <form id="transaction-form">
+                    <label for="symbol">Stock Symbol:</label>
+                    <input type="text" id="symbol" name="symbol" required maxlength="5" placeholder="e.g. AAPL" />
+                    
+                    <label for="shares">Shares:</label>
+                    <input type="number" id="shares" name="shares" required min="1" />
+                    
+                    <label for="price">Price per Share ($):</label>
+                    <input type="number" id="price" name="price" required min="0.01" step="0.01" />
+                    
+                    <label for="type">Transaction Type:</label>
+                    <select id="type" name="type" required>
+                        <option value="buy">Buy</option>
+                        <option value="sell">Sell</option>
+                    </select>
+                    
+                    <button type="submit">Add Transaction</button>
+                </form>
+            </section>
+            <section class="analysis-section">
+                <h2>Transactions</h2>
+                <table id="transactions-table">
+                    <thead>
+                        <tr>
+                            <th>Symbol</th>
+                            <th>Shares</th>
+                            <th>Price per Share</th>
+                            <th>Type</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Transactions will be added here -->
+                    </tbody>
+                </table>
+            </section>
+        </section>
+
+        <!-- Watchlist Page -->
+        <section id="page-watchlist" class="page">
+            <section class="watchlist">
+                <h2>Watchlist</h2>
+                <ul id="watchlist-stocks">
+                    <!-- Watchlist stocks will be listed here -->
+                </ul>
+                <input type="text" id="watchlist-input" placeholder="Add stock symbol to watchlist" maxlength="5" />
+                <button id="add-watchlist-btn">Add</button>
+            </section>
+        </section>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
